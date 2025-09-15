@@ -1,0 +1,19 @@
+{
+  "name": "server-models",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server-models/src",
+  "projectType": "library",
+  "tags": ["type:server-models"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/server-models",
+        "main": "libs/server-models/src/index.ts",
+        "tsConfig": "libs/server-models/tsconfig.lib.json",
+        "assets": ["libs/server-models/*.md"]
+      }
+    }
+  }
+}

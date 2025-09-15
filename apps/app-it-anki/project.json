@@ -4,7 +4,7 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/app-it-anki/src",
-  "tags": [],
+  "tags": ["type:app-web"],
   "targets": {
     "build": {
       "executor": "@angular/build:application",

@@ -20,9 +20,20 @@ export default [
           enforceBuildableLibDependency: true,
           allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
           depConstraints: [
+            // Frontend depends on shared
             {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
+              sourceTag: 'type:app-web',
+              onlyDependOnLibsWithTags: ['type:shared'],
+            },
+            // Backends apis depends on shared, shared models
+            {
+              sourceTag: 'type:app-api',
+              onlyDependOnLibsWithTags: ['type:shared', 'type:server-models'],
+            },
+            // Server-models depends on shared types
+            {
+              sourceTag: 'type:server-models',
+              onlyDependOnLibsWithTags: ['type:shared'],
             },
           ],
         },

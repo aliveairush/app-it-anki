@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JsonPipe } from '@angular/common';
+import { PostDto } from 'shared-types';
 
 @Component({
   imports: [RouterModule, JsonPipe],
@@ -15,5 +16,5 @@ export class App {
 
   private readonly http = inject(HttpClient);
 
-  responseBackend = toSignal(this.http.get('http://localhost:3000/api/posts'));
+  responseBackend = toSignal(this.http.get<Array<PostDto>>('http://localhost:3000/api/posts'));
 }

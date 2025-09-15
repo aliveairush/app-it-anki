@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "server-models": ["libs/server-models/src/index.ts"],
+      "shared-types": ["libs/shared/shared-types/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
