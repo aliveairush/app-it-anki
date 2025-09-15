@@ -15,5 +15,5 @@ export class App {
 
   private readonly http = inject(HttpClient);
 
-  responseBackend = toSignal(this.http.get('http://localhost:3333/api'));
+  responseBackend = toSignal(this.http.get('http://localhost:3000/api/posts'));
 }

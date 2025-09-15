@@ -9,18 +9,21 @@ import { pinoHttp } from 'pino-http';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { connectMongo } from './db';
+import { postsRouter } from './routes/posts.routes';
 
 const app = express();
 
 app.use(pinoHttp()); // Http logging
-app.use(helmet({ contentSecurityPolicy: false})) //For nw false
-app.use(cookieParser())
+app.use(helmet({ contentSecurityPolicy: false })); //For nw false
+app.use(cookieParser());
+app.use(express.json())
 
-app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true,
-}))
-
+app.use(
+  cors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+  })
+);
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 const port = process.env.PORT || 3000;
@@ -40,10 +43,9 @@ app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to anki-api!' });
 });
 
+app.use('/api/posts', postsRouter);
+
 // ---------- AUTH ----------
 // app.use('/auth', authRouter);
 
 // app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
-
-
