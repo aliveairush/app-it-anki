@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { connectMongo } from './db';
 import { postsRouter } from './routes/posts.routes';
+import { authRouter } from './routes/auth';
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/api/posts', postsRouter);
+app.use('/api/auth', authRouter);
 
 // ---------- AUTH ----------
 // app.use('/auth', authRouter);
