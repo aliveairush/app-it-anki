@@ -1,6 +1,9 @@
 import { UserModel } from '../models/user.model';
 import bcrypt from 'bcrypt';
-import { signAccessToken } from '../utils/jwt';
+import { signAccessToken, signRefreshToken } from '../utils/jwt';
+import { sendActivationEmail } from './mail-service';
+import { RefreshTokenModel } from '../models/refresh-token.model';
+import { UserDto } from '../dtos/user.dto';
 
 export const registerUser = async (user: {
   email: string;
@@ -16,19 +19,43 @@ export const registerUser = async (user: {
 
   // second param is salt
   const hashPassword = await bcrypt.hash(user.password, 4);
-  const newCreatedUser = await UserModel.create({
+  const generatedActivationLink = 'RANDOM'; // generate by uuid
+  const newCreatedUserDoc = await UserModel.create({
     ...user,
     passwordHash: hashPassword,
-    activationLink: 'JUST TEST', // TODO for future
+    activationLink: generatedActivationLink, // TODO for future
   });
 
-  // TODO send activation link
+  await sendActivationEmail(user.email, generatedActivationLink);
 
-  const accessToken = signAccessToken(user);
+  const publicUserData: UserDto = new UserDto({
+    email: newCreatedUserDoc.email,
+    isActivated: newCreatedUserDoc.isActivated,
+  });
+  console.log('publicUserData', publicUserData);
+  const accessToken = signAccessToken({ ...publicUserData });
+  const refreshToken = signRefreshToken({ ...publicUserData });
+  await saveRefreshToken(newCreatedUserDoc._id, refreshToken);
 
-  // TODO save refresh token to database
   return {
-    accessToken,
-    ...newCreatedUser,
-  }
+    user: publicUserData,
+    tokens: {
+      accessToken,
+      refreshToken,
+    },
+  };
 };
+
+async function saveRefreshToken(userId, refreshToken: string) {
+  const foundToken = await RefreshTokenModel.findOne({ user: userId });
+
+  if (foundToken) {
+    foundToken.refreshToken = refreshToken;
+    return foundToken.save();
+  }
+  const newToken = await RefreshTokenModel.create({
+    user: userId,
+    refreshToken: refreshToken,
+  });
+  return newToken;
+}

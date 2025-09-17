@@ -9,4 +9,4 @@ const refreshTokenSchema = new Schema(
 );
 
 export type RefreshTokenDoc = InferSchemaType<typeof refreshTokenSchema>
-export const RefreshToken = model('RefreshToken', refreshTokenSchema);
+export const RefreshTokenModel = model('RefreshToken', refreshTokenSchema);
