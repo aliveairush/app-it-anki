@@ -7,8 +7,9 @@ export function errorMiddleware(
   res: express.Response,
   next
 ) {
-  console.error(err);
+  console.error('Middleware error capture:', err);
   if (err instanceof ApiError) {
+
     return res
       .status(err.status)
       .json({ message: err.message, errors: err.errors });
