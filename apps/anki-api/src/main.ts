@@ -11,13 +11,14 @@ import cookieParser from 'cookie-parser';
 import { connectMongo } from './db';
 import { postsRouter } from './routes/posts.routes';
 import { authRouter } from './routes/auth';
+import { errorMiddleware} from './middlewares/error-middleware';
 
 const app = express();
 
 app.use(pinoHttp()); // Http logging
 app.use(helmet({ contentSecurityPolicy: false })); //For nw false
 app.use(cookieParser());
-app.use(express.json())
+app.use(express.json());
 
 app.use(
   cors({
@@ -46,6 +47,7 @@ app.get('/api', (req, res) => {
 
 app.use('/api/posts', postsRouter);
 app.use('/api/auth', authRouter);
+app.use(errorMiddleware); // Error middleware should be last
 
 // ---------- AUTH ----------
 // app.use('/auth', authRouter);

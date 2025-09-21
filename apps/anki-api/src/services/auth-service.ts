@@ -4,6 +4,7 @@ import { signAccessToken, signRefreshToken } from '../utils/jwt';
 import { sendActivationEmail } from './mail-service';
 import { RefreshTokenModel } from '../models/refresh-token.model';
 import { UserDto } from '../dtos/user.dto';
+import { ApiError } from '../exceptions/api-error';
 
 export const registerUser = async (user: {
   email: string;
@@ -14,7 +15,7 @@ export const registerUser = async (user: {
   });
 
   if (existingUserWithSameEmail) {
-    throw new Error('User with existingUserWithSameEmail');
+    throw ApiError.BadRequestError('User already exists');
   }
 
   // second param is salt
