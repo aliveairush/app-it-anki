@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import {
-  loginUserController,
-  registerUserController,
+  loginUserController, logoutUserController,
+  registerUserController
 } from '../controllers/auth.controller';
 export const authRouter = Router();
 import { body } from 'express-validator';
@@ -13,6 +13,7 @@ authRouter.post(
   registerUserController
 );
 authRouter.post('/login', loginUserController);
+authRouter.post('/logout', logoutUserController);
 
 authRouter.post('/me', async (req, res, next) => {
   try {

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { loginUser, registerUser } from '../services/auth-service';
+import { loginUser, logout, registerUser } from '../services/auth-service';
 import { validationResult } from 'express-validator';
 import { ApiError } from '../exceptions/api-error';
 
@@ -37,6 +37,18 @@ export const loginUserController = async (req: Request, res: Response, next: Nex
     });
     res.json(userData);
   }catch (error) {
+    next(error);
+  }
+}
+
+export const logoutUserController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {refreshToken} = req.cookies;
+    const token = await logout(refreshToken);
+    res.clearCookie('refreshToken');
+    return res.sendStatus(204); // 204 - No Content
+  }
+  catch (error) {
     next(error);
   }
 }

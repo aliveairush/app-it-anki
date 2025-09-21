@@ -72,6 +72,12 @@ export async function loginUser(email: string, password: string) {
   };
 }
 
+export async function logout(refreshToken: string) {
+  if (!refreshToken) {
+    return;
+  }
+  await RefreshTokenModel.deleteOne({ refreshToken });
+}
 
 async function saveRefreshToken(userId, refreshToken: string) {
   const foundToken = await RefreshTokenModel.findOne({ user: userId });
