@@ -1,7 +1,9 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
 import {
-  loginUserController, logoutUserController,
-  registerUserController
+  loginUserController,
+  logoutUserController,
+  refreshUserTokenController,
+  registerUserController,
 } from '../controllers/auth.controller';
 export const authRouter = Router();
 import { body } from 'express-validator';
@@ -14,6 +16,7 @@ authRouter.post(
 );
 authRouter.post('/login', loginUserController);
 authRouter.post('/logout', logoutUserController);
+authRouter.post('/refresh', refreshUserTokenController);
 
 authRouter.post('/me', async (req, res, next) => {
   try {

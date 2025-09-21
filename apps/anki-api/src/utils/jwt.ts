@@ -23,6 +23,6 @@ export function verifyAccess(token: string) {
   return jwt.verify(token, process.env.JWT_ACCESS_SECRET as string) as any;
 }
 
-export function verifyRefresh(token: string) {
+export function verifyRefresh(token: string): any {
   return jwt.verify(token, process.env.JWT_REFRESH_SECRET as string) as any;
 }

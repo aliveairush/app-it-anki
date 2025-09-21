@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { loginUser, logout, registerUser } from '../services/auth-service';
+import { loginUser, logout, refreshAccessToken, registerUser } from '../services/auth-service';
 import { validationResult } from 'express-validator';
 import { ApiError } from '../exceptions/api-error';
 
@@ -47,6 +47,22 @@ export const logoutUserController = async (req: Request, res: Response, next: Ne
     const token = await logout(refreshToken);
     res.clearCookie('refreshToken');
     return res.sendStatus(204); // 204 - No Content
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+
+export const refreshUserTokenController = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {refreshToken} = req.cookies;
+    const userData = await refreshAccessToken(refreshToken);
+    res.cookie('refreshToken', userData.tokens.newRefreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 day
+      httpOnly: true,
+    });
+    res.json(userData);
   }
   catch (error) {
     next(error);

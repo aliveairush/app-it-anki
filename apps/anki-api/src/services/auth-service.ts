@@ -1,6 +1,11 @@
 import { UserModel } from '../models/user.model';
 import bcrypt from 'bcrypt';
-import { signAccessToken, signRefreshToken } from '../utils/jwt';
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyAccess,
+  verifyRefresh,
+} from '../utils/jwt';
 import { sendActivationEmail } from './mail-service';
 import { RefreshTokenModel } from '../models/refresh-token.model';
 import { UserDto } from '../dtos/user.dto';
@@ -77,6 +82,32 @@ export async function logout(refreshToken: string) {
     return;
   }
   await RefreshTokenModel.deleteOne({ refreshToken });
+}
+
+export async function refreshAccessToken(refreshToken: string) {
+  if (!refreshToken) {
+    throw ApiError.UnauthorizedError();
+  }
+  const userData = verifyRefresh(refreshToken);
+  const tokenFromDb = await RefreshTokenModel.findOne({ refreshToken });
+
+  if (!userData || !tokenFromDb) {
+    throw ApiError.UnauthorizedError();
+  }
+
+  const user = await UserModel.findOne({ email: userData.email });
+  const userDto = new UserDto(user);
+  const accessToken = signAccessToken({ ...userDto });
+  const newRefreshToken = signRefreshToken({ ...userDto });
+  await saveRefreshToken(user._id, newRefreshToken);
+
+  return {
+    user: userDto,
+    tokens: {
+      accessToken,
+      newRefreshToken,
+    },
+  };
 }
 
 async function saveRefreshToken(userId, refreshToken: string) {
