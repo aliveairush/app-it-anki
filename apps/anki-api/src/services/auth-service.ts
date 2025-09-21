@@ -15,7 +15,7 @@ export const registerUser = async (user: {
   });
 
   if (existingUserWithSameEmail) {
-    throw ApiError.BadRequestError('User already exists');
+    throw ApiError.BadRequest('User already exists');
   }
 
   // second param is salt
@@ -46,6 +46,32 @@ export const registerUser = async (user: {
     },
   };
 };
+
+export async function loginUser(email: string, password: string) {
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw ApiError.BadRequest('User does not exist');
+  }
+
+  const isPassEqual = await bcrypt.compare(password, user.passwordHash);
+  if (!isPassEqual) {
+    throw ApiError.BadRequest('Incorrect password');
+  }
+
+  const userDto = new UserDto(user);
+  const accessToken = signAccessToken({ ...userDto });
+  const refreshToken = signRefreshToken({ ...userDto });
+  await saveRefreshToken(user._id, refreshToken);
+
+  return {
+    user: userDto,
+    tokens: {
+      accessToken,
+      refreshToken,
+    },
+  };
+}
+
 
 async function saveRefreshToken(userId, refreshToken: string) {
   const foundToken = await RefreshTokenModel.findOne({ user: userId });

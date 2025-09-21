@@ -1,5 +1,8 @@
-import { Router } from 'express';
-import { registerUserController } from '../controllers/auth.controller';
+import { Router, Request, Response, NextFunction } from 'express';
+import {
+  loginUserController,
+  registerUserController,
+} from '../controllers/auth.controller';
 export const authRouter = Router();
 import { body } from 'express-validator';
 
@@ -9,14 +12,7 @@ authRouter.post(
   body('password').isLength({ min: 3, max: 32 }),
   registerUserController
 );
-
-authRouter.post('/login', async (req, res, next) => {
-  try {
-    res.json({ message: 'login Success' });
-  } catch (err) {
-    next(err);
-  }
-});
+authRouter.post('/login', loginUserController);
 
 authRouter.post('/me', async (req, res, next) => {
   try {
