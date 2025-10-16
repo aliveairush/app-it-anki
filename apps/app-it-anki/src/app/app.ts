@@ -2,11 +2,10 @@ import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { JsonPipe } from '@angular/common';
 import { PostDto } from 'shared-types';
 
 @Component({
-  imports: [RouterModule, JsonPipe],
+  imports: [RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.less',
