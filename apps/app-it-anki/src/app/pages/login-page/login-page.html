@@ -1,0 +1,23 @@
+Login
+<form [formGroup]="formLogin" (ngSubmit)="onSubmitLogin()">
+  <div>
+    <label for="email"> Email: </label>
+    <input
+      id="email"
+      type="text"
+      [formControl]="formLogin.controls.email"
+    />
+  </div>
+  <div>
+    <label for="password"> Password: </label>
+    <input
+      id="password"
+      type="password"
+      [formControl]="formLogin.controls.password"
+    />
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
+
+{{loginResponse() | json }}
