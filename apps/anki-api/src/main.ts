@@ -12,6 +12,7 @@ import { connectMongo } from './db';
 import { postsRouter } from './routes/posts.routes';
 import { authRouter } from './routes/auth';
 import { errorMiddleware} from './middlewares/error-middleware';
+import { usersRouter } from './routes/users.router';
 
 const app = express();
 
@@ -47,9 +48,13 @@ app.get('/api', (req, res) => {
 
 app.use('/api/posts', postsRouter);
 app.use('/api/auth', authRouter);
-app.use(errorMiddleware); // Error middleware should be last
-
 // ---------- AUTH ----------
 // app.use('/auth', authRouter);
 
 // app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
+
+// ------ PRIVATE API ------
+app.use('/api', usersRouter)
+app.use(errorMiddleware); // Error middleware should be last
+
