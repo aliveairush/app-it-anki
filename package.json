@@ -6,8 +6,10 @@
     "dev:up": "docker compose -f docker-compose.dev.yml up -d",
     "dev:down": "docker compose -f docker-compose.dev.yml down -v",
     "dev:back": "nx run anki-api:build",
-    "dev:front": "nx run app-it-anki:serve:development"
+    "dev:front": "nx run app-it-anki:serve:development",
+    "second:build": "nx run second-ng-app:build"
   },
+  "packageManager": "pnpm@10.18.3",
   "private": true,
   "engines": {
     "node": ">=20 <=22"
